@@ -1,39 +1,65 @@
 package com.digidens.digidens_backend.model;
 
 import jakarta.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "users")
+/**
+ * Käyttäjäjärjestelmän perusluokka. Sisältää tiedot käyttäjästä (opettaja tai
+ * oppilas), kuten käyttäjätunnuksen, salasanan, roolin, etu- ja sukunimen,
+ * opiskelijanumeron sekä luokkatasotiedon.
+ */
 public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long id; // Yksilöllinen tunniste
 
 	@Column(nullable = false, unique = true)
-	private String username;
+	private String username; // Käyttäjätunnus
 
 	@Column(nullable = false)
-	private String password;
+	private String password; // Salasana
 
 	@Column(nullable = false)
-	private String role;
+	private String role; // Käyttäjän rooli (opettaja/oppilas)
 
 	@Column(nullable = false)
-	private String firstname;
+	private String firstname; // Etunimi
 
 	@Column(nullable = false)
-	private String lastname;
+	private String lastname; // Sukunimi
 
 	@Column(nullable = true, unique = true)
-	private String studentNumber;
+	private String studentNumber; // Opiskelijanumero (vain oppilailla)
 
 	@Column(nullable = false)
-	private String gradeLevel;
+	private String gradeLevel; // Luokkataso tai kurssitaso
 
+	/**
+	 * Kurssit, joita käyttäjä opettaa (opettaja). One-to-many -suhde
+	 * CourseInstance-entityyn.
+	 */
+	@OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Set<CourseInstance> taughtCourseInstances = new HashSet<>();
+
+	/**
+	 * Kurssit, joihin käyttäjä osallistuu (oppilas). Many-to-many -suhde
+	 * CourseInstance-entityyn.
+	 */
+	@ManyToMany(mappedBy = "students", fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Set<CourseInstance> enrolledCourseInstances = new HashSet<>();
+
+	// Parametriton konstruktori JPA:lle
 	public User() {
 	}
 
+	// Konstruktori perusominaisuuksille
 	public User(String username, String password, String role, String firstname, String lastname, String gradeLevel) {
 		this.username = username;
 		this.password = password;
@@ -43,6 +69,7 @@ public class User {
 		this.gradeLevel = gradeLevel;
 	}
 
+	// Getterit ja setterit
 	public Long getId() {
 		return id;
 	}
@@ -107,4 +134,19 @@ public class User {
 		this.gradeLevel = gradeLevel;
 	}
 
+	public Set<CourseInstance> getTaughtCourseInstances() {
+		return taughtCourseInstances;
+	}
+
+	public void setTaughtCourseInstances(Set<CourseInstance> taughtCourseInstances) {
+		this.taughtCourseInstances = taughtCourseInstances;
+	}
+
+	public Set<CourseInstance> getEnrolledCourseInstances() {
+		return enrolledCourseInstances;
+	}
+
+	public void setEnrolledCourseInstances(Set<CourseInstance> enrolledCourseInstances) {
+		this.enrolledCourseInstances = enrolledCourseInstances;
+	}
 }
