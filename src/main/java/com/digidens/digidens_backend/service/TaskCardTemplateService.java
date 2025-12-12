@@ -1,5 +1,8 @@
 package com.digidens.digidens_backend.service;
 
+import com.digidens.digidens_backend.dto.ColumnDTO;
+import com.digidens.digidens_backend.dto.RowDTO;
+import com.digidens.digidens_backend.dto.TaskCardTemplateDTO;
 import com.digidens.digidens_backend.model.*;
 import com.digidens.digidens_backend.repository.*;
 import org.springframework.stereotype.Service;
