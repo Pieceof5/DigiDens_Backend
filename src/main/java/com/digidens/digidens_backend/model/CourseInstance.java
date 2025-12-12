@@ -99,7 +99,7 @@ public class CourseInstance {
 		this.endDate = endDate;
 	}
 
-	//  lisää opiskelija toteutukseen
+	// lisää opiskelija toteutukseen
 	public void addStudent(User student) {
 		this.students.add(student);
 	}
